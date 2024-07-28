@@ -1,0 +1,56 @@
+server:
+  port: 8080
+spring:
+  # Database configs
+  datasource:
+    url: db_url_placeholder
+    username: db_name_placeholder
+    password: db_pw_placeholder
+    driver-class-name: com.mysql.driver_placeholder
+
+  servlet:
+    # File uploading
+    multipart:
+      # max size of a single file
+      max-file-size: 20MB
+      # max total size of each http request
+      max-request-size: 20MB
+
+mybatis-plus:
+  configuration:
+    # MYB log for testing
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      # Logic delete setup
+      logic-delete-field: delFlag
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      # Auto-increment (MySQL)
+      id-type: auto
+
+
+
+# -------- Plugin for the project
+# MybatisX-Generator --> generate controllers, etc. codes
+# EasyCode --> auto create controller, dao, etc. for mysql table
+# mp/freemaker generator
+
+# --------SQL table setup
+# id - bigint
+# title - varchar
+# content - longtext
+# type - char
+# summary - varchar
+# category_id - bigint
+# thumbnail - varchar
+# is_top - char
+# status - char
+# comment_count - int
+# view_count - bigint
+# is_comment - char
+# create_by - bigint
+# create_time - datetime
+# update_by - bigint
+# update_time - datetime
+# del_flag - int
