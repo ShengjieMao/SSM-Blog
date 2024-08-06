@@ -29,28 +29,13 @@ mybatis-plus:
       # Auto-increment (MySQL)
       id-type: auto
 
+oss:
+  accessKey: "placeholder"
+  secretKey: "placeholder"
+  bucket: "sj-blog"
 
 
 # -------- Plugin for the project
 # MybatisX-Generator --> generate controllers, etc. codes
 # EasyCode --> auto create controller, dao, etc. for mysql table
 # mp/freemaker generator
-
-# --------SQL table setup
-# id - bigint
-# title - varchar
-# content - longtext
-# type - char
-# summary - varchar
-# category_id - bigint
-# thumbnail - varchar
-# is_top - char
-# status - char
-# comment_count - int
-# view_count - bigint
-# is_comment - char
-# create_by - bigint
-# create_time - datetime
-# update_by - bigint
-# update_time - datetime
-# del_flag - int

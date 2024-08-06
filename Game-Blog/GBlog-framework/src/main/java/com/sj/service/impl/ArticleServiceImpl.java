@@ -15,6 +15,7 @@ import com.sj.mapper.ArticleMapper;
 import com.sj.service.ArticleService;
 import com.sj.service.CategoryService;
 import com.sj.utils.BeanCopyUtils;
+import com.sj.utils.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -25,11 +26,17 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.sj.constants.RedisConstants.ARTICLE_VIEWCOUNT;
+import static sun.security.krb5.Confounder.longValue;
+
 @Service
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private RedisCache redisCache;
 
     @Override
     public ResponseResult hotArticleList() {
@@ -93,6 +100,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public ResponseResult getArticleDetails(Long id) {
         Article article = getById(id);
+
+        // Get views from redis
+        Integer viewCount = redisCache.getCacheMapValue(ARTICLE_VIEWCOUNT, id.toString());
+        article.setViewCount(viewCount.longValue());
+
         ArticleDetailVo articleDetailVo = BeanCopyUtils.copyBean(article,
                 ArticleDetailVo.class);
 
@@ -104,6 +116,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
 
         return ResponseResult.okResult(articleDetailVo);
+    }
+
+    @Override
+    public ResponseResult updateViewCount(Long id) {
+        redisCache.incrementCacheMapValue(ARTICLE_VIEWCOUNT, id.toString(), 1);
+        return ResponseResult.okResult();
     }
 }
 

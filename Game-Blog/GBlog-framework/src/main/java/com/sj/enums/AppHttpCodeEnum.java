@@ -12,6 +12,7 @@ public enum AppHttpCodeEnum {
 
     CONTENT_NOT_NULL(506, "Contents must not be blank"),
     FILE_TYPE_ERROR(507, "Please upload JPG files only"),
+    FILE_SIZE_ERROR(507, "Please upload file size less than 2MB"),
     REGISTER_NOT_NULL(508, "Please fill in all blanks"),
     USERNAME_EXIST(501, "The user already exists"),
     PHONENUMBER_EXIST(502, "The phone already exists"),

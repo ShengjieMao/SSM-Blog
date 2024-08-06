@@ -12,10 +12,6 @@ import com.sj.service.ArticleService;
 import com.sj.utils.RedisCache;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import static com.sj.constants.RedisConstants.ARTICLE_VIEWCOUNT;
-
-
 @RestController
 @RequestMapping("/article")
 public class ArticleController {

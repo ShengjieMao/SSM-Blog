@@ -1,6 +1,7 @@
 package com.sj.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sj.domain.ResponseResult;
 import com.sj.domain.entity.LoginUser;
@@ -25,6 +26,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.Objects;
+import java.util.function.Function;
 
 import static com.sj.constants.RedisConstants.BLOG_USER_LOGIN;
 
@@ -50,22 +52,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Override
     public ResponseResult userRegister(User user) {
         if (!StringUtils.hasText(user.getUserName())
-                && !StringUtils.hasText(user.getPassword())
-                && !StringUtils.hasText(user.getEmail())
-                && !StringUtils.hasText(user.getNickName())
-                && !StringUtils.hasText(user.getPhonenumber())){
+                || !StringUtils.hasText(user.getPassword())
+                || !StringUtils.hasText(user.getEmail())
+                || !StringUtils.hasText(user.getNickName())
+                || !StringUtils.hasText(user.getPhonenumber())){
             throw new SystemException(AppHttpCodeEnum.REGISTER_NOT_NULL);
         }
 
-        if (!judgeUsername(user.getUserName())){
-            throw new SystemException(AppHttpCodeEnum.USERNAME_EXIST);
-        }
-        if (!judgeNickname(user.getNickName())){
-            throw new SystemException(AppHttpCodeEnum.NICKNAME_EXIST);
-        }
-        if (!judgeEmail(user.getEmail())){
-            throw new SystemException(AppHttpCodeEnum.EMAIL_EXIST);
-        }
+        checkFieldExists(User::getUserName, user.getUserName(), AppHttpCodeEnum.USERNAME_EXIST);
+        checkFieldExists(User::getEmail, user.getEmail(), AppHttpCodeEnum.EMAIL_EXIST);
+//        checkFieldExists(User::getNickName, user.getNickName(), AppHttpCodeEnum.NICKNAME_EXIST);
 
         // Encrypt password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -141,33 +137,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return ResponseResult.okResult();
     }
 
-    /**
-     *
-     */
-    public boolean judgeUsername(String username){
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper();
-        queryWrapper.eq(User::getUserName, username);
+    private void checkFieldExists(Function<User, ?> fieldGetter, String value, AppHttpCodeEnum exceptionCode) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq((SFunction<User, ?>) fieldGetter, value);
         User user = getOne(queryWrapper);
-        return Objects.isNull(user);
+        if (Objects.nonNull(user)) {
+            throw new SystemException(exceptionCode);
+        }
     }
-
-    /**
-     *
-     */
-    public boolean judgeEmail(String email){
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper();
-        queryWrapper.eq(User::getEmail, email);
-        User user = getOne(queryWrapper);
-        return Objects.isNull(user);
-    }
-
-    /**
-     *
-     */
-    public boolean judgeNickname(String nickname){
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper();
-        queryWrapper.eq(User::getNickName, nickname);
-        User user = getOne(queryWrapper);
-        return Objects.isNull(user);
-    }
+//    public boolean judgeUsername(String username){
+//        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper();
+//        queryWrapper.eq(User::getUserName, username);
+//        User user = getOne(queryWrapper);
+//        return Objects.isNull(user);
+//    }
 }
