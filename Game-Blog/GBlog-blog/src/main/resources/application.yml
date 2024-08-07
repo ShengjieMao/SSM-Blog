@@ -34,6 +34,11 @@ oss:
   secretKey: "placeholder"
   bucket: "sj-blog"
 
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
 
 # -------- Plugin for the project
 # MybatisX-Generator --> generate controllers, etc. codes

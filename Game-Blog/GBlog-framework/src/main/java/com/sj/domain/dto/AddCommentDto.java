@@ -17,12 +17,15 @@ public class AddCommentDto {
     /**
      *
      */
+    // Property document description
     @ApiModelProperty(notes = "Comment Type: 0 - blog comment, 1 - Link")
+
     private String type;
 
     /**
      *
      */
+    @ApiModelProperty(notes = "Article ID")
     private Long articleId;
 
     /**

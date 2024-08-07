@@ -3,10 +3,16 @@ package com.sj.domain.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName(value = "sj_comment")
 @ApiModel(description = "Add comment entity")
 public class Comment implements Serializable {

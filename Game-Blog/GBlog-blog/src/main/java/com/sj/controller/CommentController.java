@@ -15,7 +15,7 @@ import static com.sj.constants.CommonConstants.LINK_COMMENT;
 
 @RestController
 @RequestMapping("/comment")
-@Api(tags = "Comments", description = "Comment ports")
+@Api(tags = "Comments", description = "Comment ports") // Swagger
 public class CommentController {
 
     @Resource
@@ -39,6 +39,7 @@ public class CommentController {
     /**
      *
      */
+    // Use DTO instead of entity to make processing more regulated
     @PostMapping("/addComment")
     public ResponseResult addComment(@RequestBody AddCommentDto addCommentDto) {
         Comment comment = BeanCopyUtils.copyBean(addCommentDto, Comment.class);
@@ -49,6 +50,11 @@ public class CommentController {
      * Links comments
      */
     @GetMapping("/linkCommentList")
+    @ApiOperation(value = "Link comment", notes = "Get a page of link comments")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "Page Number"),
+            @ApiImplicitParam(name = "pageSize", value = "Count on each page")
+    })
     public ResponseResult linkCommentList(Integer pageNum, Integer pageSize) {
         return commentService.getCommentList(LINK_COMMENT, null, pageNum, pageSize);
     }
