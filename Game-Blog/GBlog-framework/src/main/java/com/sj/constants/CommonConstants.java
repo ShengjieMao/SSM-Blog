@@ -17,6 +17,7 @@ public class CommonConstants {
     public static final String ARTICLE_COMMENT = "0";
     public static final String LINK_COMMENT = "1";
 
+    public static final String ADMAIN = "1";
     public static final String MENU = "C";
     public static final String BUTTON = "F";
 
@@ -24,7 +25,6 @@ public class CommonConstants {
 
     public static final Long MENU_PARENT_ID = 0L;
 
-    public static final String ADMAIN = "1";
 
     public static final String LINK_ID = "id";
     public static final String LINK_STATUS = "status";

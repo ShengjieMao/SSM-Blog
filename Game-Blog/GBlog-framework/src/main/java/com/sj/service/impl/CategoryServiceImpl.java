@@ -11,7 +11,6 @@ import com.sj.domain.dto.CategoryDto;
 import com.sj.domain.entity.Article;
 import com.sj.domain.entity.Category;
 import com.sj.domain.vo.AdminCategoryVo;
-import com.sj.domain.vo.CategoryTwoVo;
 import com.sj.domain.vo.CategoryVo;
 import com.sj.domain.vo.DownloadDataVo;
 import com.sj.enums.AppHttpCodeEnum;
@@ -19,7 +18,7 @@ import com.sj.mapper.CategoryMapper;
 import com.sj.service.ArticleService;
 import com.sj.service.CategoryService;
 import com.sj.utils.BeanCopyUtils;
-import com.sj.utils.DownLoadExcelUtils;
+import com.sj.utils.DownloadExcelUtils;
 import com.sj.utils.WebUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -170,5 +169,14 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
         queryWrapper.eq(Category::getId,id);
         String categoryName = getOne(queryWrapper).getName();
         return categoryName;
+    }
+
+    @Override
+    public List<CategoryVo> listAllCategory() {
+        LambdaQueryWrapper<Category> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Category::getStatus, CATEGORY_STATUS_NORMAL);
+        List<Category> list = list(wrapper);
+        List<CategoryVo> categoryVos = BeanCopyUtils.copyBeanList(list, CategoryVo.class);
+        return categoryVos;
     }
 }

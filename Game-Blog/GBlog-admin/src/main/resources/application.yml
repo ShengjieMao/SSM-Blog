@@ -1,0 +1,47 @@
+server:
+  port: 8989
+
+spring:
+  datasource:
+    url: db_url_placeholder
+    username: db_user_placeholder
+    password: db_password_placeholder
+    driver-class-name: com.mysql.placeholder
+
+  # Uploading documents
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 5MB
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: xu.123456
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: 100ms
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: delFlag
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      id-type: auto
+
+
+oss:
+  endpoint: placeholder
+  accessKeyId: placeholder
+  accessKeySecret: placeholder
+  bucketName: placeholder

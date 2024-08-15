@@ -4,7 +4,7 @@ import com.sj.domain.ResponseResult;
 import com.sj.domain.dto.CategoryDto;
 import com.sj.domain.entity.Category;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.sj.domain.vo.CategoryTwoVo;
+import com.sj.domain.vo.CategoryVo;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -30,4 +30,6 @@ public interface CategoryService extends IService<Category> {
     void getExcelData(String filename, HttpServletResponse response) throws IOException;
 
     String getCategoryName(Long id);
+
+    List<CategoryVo> listAllCategory();
 }
