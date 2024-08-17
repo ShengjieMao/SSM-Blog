@@ -194,9 +194,14 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu>
         return menuTree;
     }
 
+    @Override
+    public boolean hasChild(Long menuId) {
+        LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Menu::getParentId,menuId);
+        return count(queryWrapper) != 0;
+    }
+
     public List<Long> selectMenuListByRoleId(Long roleId) {
         return getBaseMapper().selectMenuListByRoleId(roleId);
     }
-
-
 }

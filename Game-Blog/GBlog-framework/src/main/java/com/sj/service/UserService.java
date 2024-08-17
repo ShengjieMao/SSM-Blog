@@ -18,4 +18,17 @@ public interface UserService extends IService<User> {
     ResponseResult updateUserInfo(User user);
 
     ResponseResult userRegister(User user);
+
+    ResponseResult selectUserPage(User user, Integer pageNum, Integer pageSize);
+
+    // Add user:
+    //  - unique name
+    //  - unique phone number
+    //  - unique email address
+    boolean checkUserNameUnique(String userName);
+    boolean checkPhoneUnique(User user);
+    boolean checkEmailUnique(User user);
+    ResponseResult addUser(User user);
+
+    void updateUser(User user);
 }

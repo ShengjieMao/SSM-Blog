@@ -1,16 +1,22 @@
 package com.sj.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sj.domain.ResponseResult;
 import com.sj.domain.entity.LoginUser;
 import com.sj.domain.entity.User;
+import com.sj.domain.entity.UserRole;
 import com.sj.domain.vo.BlogUserLoginVo;
+import com.sj.domain.vo.PageVo;
 import com.sj.domain.vo.UserInfoVo;
+import com.sj.domain.vo.UserVo;
 import com.sj.enums.AppHttpCodeEnum;
 import com.sj.exception.SystemException;
 import com.sj.mapper.UserMapper;
+import com.sj.service.UserRoleService;
 import com.sj.service.UserService;
 import com.sj.utils.BeanCopyUtils;
 import com.sj.utils.JwtUtils;
@@ -22,11 +28,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.sj.constants.RedisConstants.BLOG_USER_LOGIN;
 
@@ -45,6 +56,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
     @Resource
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Resource
+    private UserRoleService userRoleService;
 
     /**
      *
@@ -68,6 +82,78 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         save(user);
 
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult selectUserPage(User user, Integer pageNum, Integer pageSize) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper();
+
+        queryWrapper.like(StringUtils.hasText(user.getUserName()), User::getUserName,
+                user.getUserName());
+        queryWrapper.eq(StringUtils.hasText(user.getStatus()), User::getStatus,
+                user.getStatus());
+        queryWrapper.eq(StringUtils.hasText(user.getPhonenumber()),
+                User::getPhonenumber,user.getPhonenumber());
+
+        Page<User> page = new Page<>();
+        page.setCurrent(pageNum);
+        page.setSize(pageSize);
+        page(page,queryWrapper);
+
+        List<User> users = page.getRecords();
+        List<UserVo> userVoList = users.stream()
+                .map(u -> BeanCopyUtils.copyBean(u, UserVo.class))
+                .collect(Collectors.toList());
+        PageVo pageVo = new PageVo();
+        pageVo.setTotal(page.getTotal());
+        pageVo.setRows(userVoList);
+
+        return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public boolean checkUserNameUnique(String userName) {
+        return count(Wrappers.<User>lambdaQuery().eq(User::getUserName,userName)) == 0;
+    }
+
+    @Override
+    public boolean checkPhoneUnique(User user) {
+        return count(Wrappers.<User>lambdaQuery().eq(User::getPhonenumber,
+                user.getPhonenumber())) == 0;
+    }
+
+    @Override
+    public boolean checkEmailUnique(User user) {
+        return count(Wrappers.<User>lambdaQuery().eq(User::getEmail,user.getEmail())) == 0;
+    }
+
+    @Override
+    @Transactional
+    public ResponseResult addUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        save(user);
+
+        if(user.getId() != null && user.getId().length() > 0){
+            addUserRole(user);
+        }
+        return ResponseResult.okResult();
+    }
+
+    @Override
+    @Transactional
+    public void updateUser(User user) {
+        LambdaQueryWrapper<UserRole> userRoleUpdateWrapper = new LambdaQueryWrapper<>();
+        userRoleUpdateWrapper.eq(UserRole::getUserId,user.getId());
+        userRoleService.remove(userRoleUpdateWrapper);
+
+        addUserRole(user);
+        updateById(user);
+    }
+
+    private void addUserRole(User user) {
+        List<UserRole> sysUserRoles = Arrays.stream(user.getId())
+                .map(roleId -> new UserRole(user.getId(), roleId)).collect(Collectors.toList());
+        userRoleService.saveBatch(sysUserRoles);
     }
 
     /**

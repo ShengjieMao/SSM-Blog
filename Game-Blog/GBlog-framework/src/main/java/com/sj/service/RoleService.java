@@ -26,4 +26,14 @@ public interface RoleService extends IService<Role> {
     ResponseResult updateRoleInfo(RoleDto roleDto);
 
     List<String> selectRoleKeyByUserId(Long id);
+
+    ResponseResult selectRolePage(Role role, Integer pageNum, Integer pageSize);
+
+    void addRole(Role role);
+
+    void updateRole(Role role);
+
+    List<Role> selectRoleAll();
+
+    List<Long> selectRoleIdByUserId(Long userId);
 }

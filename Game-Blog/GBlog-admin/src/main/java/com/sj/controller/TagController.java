@@ -4,9 +4,13 @@ import com.sj.domain.ResponseResult;
 import com.sj.domain.vo.TagByIdVo;
 import com.sj.domain.dto.TagDto;
 import com.sj.domain.vo.PageVo;
+import com.sj.domain.vo.TagVo;
 import com.sj.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/content/tag")
@@ -41,8 +45,16 @@ public class TagController {
         return tagService.updateTag(tagByIdVo);
     }
 
-    @GetMapping("/listAllTag")
+    @GetMapping("/listTagNames")
     public ResponseResult getNameTagList(){
         return tagService.getNameTagList();
+    }
+
+    // @PreAuthorize()
+    // @PostAuthorize()
+    @GetMapping("/listAllTag")
+    public ResponseResult listAllTag() {
+        List<TagVo> list = tagService.listAllTag();
+        return ResponseResult.okResult(list);
     }
 }

@@ -11,6 +11,7 @@ import com.sj.domain.dto.LinkStatusDto;
 import com.sj.domain.entity.Link;
 import com.sj.domain.vo.AdminLinkVo;
 import com.sj.domain.vo.LinkVo;
+import com.sj.domain.vo.PageVo;
 import com.sj.mapper.LinkMapper;
 import com.sj.service.LinkService;
 import com.sj.utils.BeanCopyUtils;
@@ -114,5 +115,28 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link>
         linkMapper.update(null, updateWrapper);
 
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public PageVo selectLinkPage(Link link, Integer pageNum, Integer pageSize) {
+        LambdaQueryWrapper<Link> queryWrapper = new LambdaQueryWrapper<>();
+
+        queryWrapper.like(StringUtils.hasText(link.getName()), Link::getName,
+                link.getName());
+        queryWrapper.eq(Objects.nonNull(link.getStatus()), Link::getStatus,
+                link.getStatus());
+
+        Page<Link> page = new Page<>();
+        page.setCurrent(pageNum);
+        page.setSize(pageSize);
+        page(page,queryWrapper);
+
+        List<Link> categories = page.getRecords();
+
+        PageVo pageVo = new PageVo();
+        pageVo.setTotal(page.getTotal());
+        pageVo.setRows(categories);
+
+        return pageVo;
     }
 }

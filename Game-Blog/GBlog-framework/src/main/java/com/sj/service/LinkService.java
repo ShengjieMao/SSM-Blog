@@ -7,6 +7,7 @@ import com.sj.domain.dto.LinkStatusDto;
 import com.sj.domain.entity.Link;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sj.domain.vo.LinkVo;
+import com.sj.domain.vo.PageVo;
 
 public interface LinkService extends IService<Link> {
 
@@ -23,4 +24,6 @@ public interface LinkService extends IService<Link> {
     ResponseResult updateLink(LinkDto linkDto);
 
     ResponseResult updateLinkStatus(LinkStatusDto linkStatusDto);
+
+    PageVo selectLinkPage(Link link, Integer pageNum, Integer pageSize);
 }

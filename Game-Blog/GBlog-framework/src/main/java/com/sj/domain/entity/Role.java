@@ -64,6 +64,9 @@ public class Role implements Serializable {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
+    @TableField(exist = false)
+    private Long[] menuIds;
+
     /**
      *
      */
@@ -300,5 +303,8 @@ public class Role implements Serializable {
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
+    }
+
+    public Long[] getMenuIds() {
     }
 }

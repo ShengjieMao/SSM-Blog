@@ -6,6 +6,8 @@ import com.sj.domain.dto.AddArticleDto;
 import com.sj.domain.dto.AdminArticleDto;
 import com.sj.domain.dto.ArticleDto;
 import com.sj.domain.entity.Article;
+import com.sj.domain.vo.ArticleByIdVo;
+import com.sj.domain.vo.PageVo;
 
 public interface ArticleService extends IService<Article> {
     ResponseResult hotArticleList();
@@ -26,4 +28,12 @@ public interface ArticleService extends IService<Article> {
     ResponseResult addArticle(AddArticleDto articleDto);
 
     ResponseResult updateArticle(AdminArticleDto adminArticleDto);
+
+    // Search pagination
+    PageVo selectArticlePage(Article article, Integer pageNum, Integer pageSize);
+
+    // Get article based on article id,
+    ArticleByIdVo getInfo(Long id);
+    // then Edit article
+    void edit(ArticleDto article);
 }

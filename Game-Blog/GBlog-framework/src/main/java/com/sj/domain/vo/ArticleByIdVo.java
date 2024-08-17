@@ -1,4 +1,4 @@
-package com.sj.domain.dto;
+package com.sj.domain.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ArticleDto {
+public class ArticleByIdVo {
+
     private Long id;
     private String title;
     private String content;
@@ -20,7 +21,7 @@ public class ArticleDto {
     private String isTop;
     private String status;
     private Long viewCount;
-    // Allowance of comments, 1- Y，0 - N
+    // Allowance of comments: 1 - Y, 0 - N
     private String isComment;
     private List<Long> tags;
 }

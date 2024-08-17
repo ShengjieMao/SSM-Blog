@@ -3,12 +3,14 @@ package com.sj.controller;
 import com.sj.domain.ResponseResult;
 import com.sj.domain.entity.Category;
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.fastjson.JSON;
 import com.sj.domain.vo.CategoryVo;
 import com.sj.domain.vo.DownloadDataVo;
 import com.sj.enums.AppHttpCodeEnum;
 import com.sj.service.CategoryService;
 import com.sj.utils.BeanCopyUtils;
 import com.sj.utils.WebUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +34,7 @@ public class CategoryController {
         return categoryService.getCategoryList();
     }
 
+    @PreAuthorize("@ps.hasPermission('content:category:export')")
     @GetMapping("/export")
     public void export(HttpServletResponse response) {
         try {
